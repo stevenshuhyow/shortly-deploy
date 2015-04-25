@@ -3,12 +3,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
-      options: {
-        separator: ';'
-      },
+
       dist: {
-        src: ['node_modules/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['public/client/*.js'],
+        dest: 'public/lib/publicConcat.js',
       }
 
     },
@@ -29,23 +27,18 @@ module.exports = function(grunt) {
     },
 
     uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-      },
-      dist:{
-        files:{
-          'dist/ <%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-        }
+
+      dist: {
+        src: ['public/lib/publicConcat.js'],
+        dest: 'public/lib/publicConcat.min.js',
       }
     },
 
     jshint: {
       files: [
-        // Add filespec list here
         'public/client/*.js'
       ],
       options: {
-        force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
@@ -121,9 +114,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [
-    // add your deploy tasks here
-  ]);
+  grunt.registerTask('deploy', ['jshint', 'test', 'concat', 'uglify']);
 
 
 };
